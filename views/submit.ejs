@@ -1,0 +1,62 @@
+<%- include('partials/header') %>
+<div class="container">
+  <h4><a class="btn-sm btn-success">logged in</a><%=name%></h4>
+    <div class="row">
+      <div class="col-sm-2">
+      <h5>Create New Post:</h5>
+      </div>
+      <div class="col-sm-6">
+        <form action="/submit" method="POST">
+          <textarea class="form-control text-center" rows="2" name="post" placeholder="Write here...." required style="display: inline;"></textarea>
+          <button type="submit" class="btn btn-dark">Submit</button>
+        </form>
+      </div>
+      <div class="col-sm-4">
+        <a class="btn btn-danger" href="/logout" role="button">Log Out</a>
+        <a class="btn btn-warning" onclick="alertfun()" role="button">Delete Account</a>
+        <a class="btn btn-danger" href="/deletePost" role="button">delete Post</a>
+      </div>
+    </div>
+    <div class="container">
+      <h4>All Posts</h1>
+      <div class="card-columns">
+      <%userswithposts.forEach(function(user){if(user.post!=""){%>
+        <div style="background-color:#<%=color[Math.floor(Math.random() * 24)]%>" class="card text-white mb-3">
+          <span class="badge"><%=user.createdAt.toLocaleTimeString('en-IND')%> <%=user.createdAt.toDateString()%></span>
+          <span class="badge">&nbsp;&nbsp;&nbsp;<%=user.name %></span>
+          <div class="card-body" id="<%=user.id+"body" %>">
+            <p class="card-text"><%=user.post%></p>
+          </div>
+          <div class="card-footer" id="<%=user.id+"footer" %>">
+          <a class="btn text-dark btn-warning btn-sm" onclick="comment(this.name)" name="<%=user.id%>">Add a comment</a>
+          <a class="btn text-dark btn-warning btn-sm" onclick="viewcomment(this.name)" name="<%=user.id%>">View comments</a>
+          <a class="btn text-dark btn-warning btn-sm"><%=user.comment.length%></a>
+  
+        <div id=<%=user.id+"p"%> style="display:none;" >
+          <form action="/comment" method="POST">
+            <div class="form-group" style="margin:5px 0px">
+              <textarea class="form-control text-center" rows="2" name="comment" placeholder="Write a comment" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-dark btn-sm" name="postId" value=<%=user.id%> >Submit</button>
+          </form>
+        </div>
+      </div>
+      <div style="display:none" class="card-body" id=<%=user.id+"r"%>>
+        <div class="overflow-auto" style="height:15rem;width:20rem">
+          <%user.comment.forEach(function(comm){%>
+            <%=comm.name%>
+            <div style="border-left-style:solid;border-width: 5px;margin:5px;padding:3px">
+              <%=comm.comment%>
+            </div>
+        <%})%>
+
+     </div>
+     <a class="btn text-dark btn-warning btn-sm"onclick="res_post(this.name)" name="<%=user.id%>">Post</a>
+     </div>
+  </div>
+      <%}})%>
+      </div>
+      <hr>
+    </div>
+</div>
+<%- include('partials/footer') %>
